@@ -61,17 +61,17 @@ def rec():
     wf.writeframes(b''.join(frames))
     wf.close()
     print('File recorded')    
+#-------------
 
 
-print('Initializing REC...')
-status = input("Press R to start recording? ")
-status = status.lower()
+while True:
+    start_rec = input("Press R to start recording? (R/r): ")
+    if start_rec.lower() == 'r':
+        print("Recording...")
+        break
+    else:
+        print("Invalid input.")
 
-"""
-while status != 'r':
-    status = input("Input invalid. Press R to start recording: ")
-    status = status.lower()
-"""
 
 rec()
 
