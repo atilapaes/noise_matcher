@@ -12,23 +12,18 @@ import datetime
 
 def rec():
     """
-    chunk = 1024,
-        sample_format = pyaudio.paInt16,
-        channels = 2,
-        fs = 44100,
-        seconds = 5,
-        filename = "data/raw/sample.wav"):    
+ 
     """
     chunk = 1024  # Record in chunks of 1024 samples
     sample_format = pyaudio.paInt16  # 16 bits per sample
     channels = 2
     fs = 44100  # Record at 44100 samples per second
     seconds = 3
-    filename = "data/raw/"+ datetime.datetime.now().strftime('%Y-%m-%d %H %M %S') +".wav"
+    filename = "data/raw/"+ datetime.datetime.now().strftime('%Y-%m-%d %H-%M-%S') +".wav"
     
     p = pyaudio.PyAudio()  # Create an interface to PortAudio
     
-    print('Recording')
+    print('Recording...')
     
     stream = p.open(format=sample_format,
                     channels=channels,
@@ -51,7 +46,7 @@ def rec():
     # Terminate the PortAudio interface
     p.terminate()
     
-    print('Finished recording. Recording file')
+    print('Finished recording. Writing file...')
     
     # Save the recorded data as a WAV file
     wf = wave.open(filename, 'wb')
@@ -60,14 +55,13 @@ def rec():
     wf.setframerate(fs)
     wf.writeframes(b''.join(frames))
     wf.close()
-    print('File recorded')    
+    print('Done.')    
 #-------------
 
 
 while True:
     start_rec = input("Press R to start recording? (R/r): ")
     if start_rec.lower() == 'r':
-        print("Recording...")
         break
     else:
         print("Invalid input.")
