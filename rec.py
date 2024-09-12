@@ -10,7 +10,7 @@ import pyaudio
 import wave
 import datetime
 
-def rec():
+def rec(idi=0):
     """
  
     """
@@ -23,14 +23,13 @@ def rec():
     
     p = pyaudio.PyAudio()  # Create an interface to PortAudio
     
-    ##print('Recording...')
-    
+    # Recording
     stream = p.open(format=sample_format,
                     channels=channels,
                     rate=fs,
                     frames_per_buffer=chunk,
                     input=True,
-                    input_device_index=0
+                    input_device_index=idi
                     )
     
     frames = []  # Initialize array to store frames
@@ -55,10 +54,33 @@ def rec():
     wf.setframerate(fs)
     wf.writeframes(b''.join(frames))
     wf.close()
-    #print('Done.')    
+    
 #-------------
 
+def set_input_device(): 
+    """
+    Setting the device to use
+    """
+    audio = pyaudio.PyAudio()
+    print("----------------------record device list---------------------")
+    info = audio.get_host_api_info_by_index(0)
+    numdevices = info.get('deviceCount')
+    for i in range(0, numdevices):
+            if (audio.get_device_info_by_host_api_device_index(0, i).get('maxInputChannels')) > 0:
+                print("Input Device id ", i, " - ", audio.get_device_info_by_host_api_device_index(0, i).get('name'))
+    
+    print("-------------------------------------------------------------")
+    print("")
+    idi = int(input("Which device do you want to use? "))
+    #print("recording via index "+str(idi))
+    return idi
+#--------------
 
+
+
+idi=set_input_device()
+
+#-- Starting menu
 while True:
     start_rec = input("Press R to start recording? (R/r): ")
     if start_rec.lower() == 'r':
@@ -68,10 +90,11 @@ while True:
 
 print('Recording...')
 
-        
+
+#--  Recording        
 try:
     while True:
-        rec()
+        rec(idi=idi)
 except KeyboardInterrupt:
     pass    
 
